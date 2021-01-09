@@ -63,7 +63,27 @@
 </template>
 
 <script>
+    import moment from 'moment';
     export default {
-           
+        name: "EventFormComponent",
+        props: ["validationErrors","isLoading"],
+        data(){
+            return {
+                minDate:  moment().startOf('month').format('YYYY-MM-DD'),
+                maxDate: moment().endOf('month').format('YYYY-MM-DD'),
+                event: {
+                    eventName: '',
+                    startDate: '',
+                    endDate: '',
+                    days: []
+                },
+                days: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"], 
+            }
+        },
+        methods:{
+            onSubmit(){
+                this.$emit('createEvent', this.event);
+            }
+        }
     }
 </script>
