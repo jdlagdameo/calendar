@@ -14,6 +14,11 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         //
+        if($this->app->environment('production')) {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+            
+            \Config::set('session.secure', true); // override session config for https
+        }
     }
 
     /**
