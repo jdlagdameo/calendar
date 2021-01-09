@@ -177,7 +177,6 @@ export default {
         let endOfCurrentMonth   =  moment().endOf('month').add(1, 'days');
 
         while (startOfCurrentMonth.isBefore(endOfCurrentMonth, 'day')) {
-            console.log(`Loop at ${startOfCurrentMonth.format('YYYY-MM-DD')}`);
             this.calendar.push({
                 date: startOfCurrentMonth.format('YYYY-MM-DD'),
                 day: startOfCurrentMonth.format('DD'),
@@ -191,11 +190,6 @@ export default {
             this.dismissCountDown = dismissCountDown
         },
         onSubmit(){
-            console.log(this.event.eventName);
-            console.log(this.event.startDate);
-            console.log(this.event.endDate);
-            console.log(this.event.days);
-
             this.isLoading = true;
             let $this = this;
 
@@ -222,6 +216,7 @@ export default {
             })
             .catch(function (error) {
                 // loader.hide();
+                $this.isLoading = false;
                 console.log(error);
             });
         }
