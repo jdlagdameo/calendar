@@ -1,28 +1,23 @@
 <template>
     <!-- b-container -->
     <b-container fluid class="m-2">
-        
-        <b-alert variant="success" fade 
-            v-if="success"
-            :show="dismissCountDown"
-            @dismissed="dismissCountDown=0"
-            @dismiss-count-down="countDownChanged">
-                <b-icon icon="check" aria-hidden="true"></b-icon>{{ message }}
-        </b-alert>
+        <div id="alert-container">
+            <div v-for="(result, index) in results" :key="index">
+                <b-alert variant="success" fade v-if="result.success" show>
+                    <font-awesome-icon icon="check" /> {{ result.message }}
+                </b-alert>
 
-        <b-alert variant="danger" fade 
-            v-else
-            :show="dismissCountDown"
-            @dismissed="dismissCountDown=0"
-            @dismiss-count-down="countDownChanged">
-                <b-icon icon="x-circle" aria-hidden="true"></b-icon>{{ message }}
-        </b-alert>
-
+                <b-alert variant="danger" fade v-else show>
+                    <font-awesome-icon icon="times-circle" /> {{ result.message }}
+                </b-alert>
+            </div>
+        </div>
+   
         <!-- b-card -->
-        <b-card title="Calendar" class="shadow-sm">
+        <b-card class="shadow-sm"  header="Calendar">
             <b-card-text>
                 <b-row>
-                    <b-col lg="4">
+                    <b-col lg="4" class="mt-3">
                         <EventFormComponent
                             v-on:createEvent="createEventHandler($event)"
                             :validationErrors="validationErrors"
@@ -43,7 +38,7 @@
 <script>
 
 import EventFormComponent from './components/EventFormComponent';
-import CalendarList from './components/CalendarList';
+import CalendarList from './components/Calendar/CalendarList';
 
 export default {
     name: 'App',
@@ -54,14 +49,10 @@ export default {
 
     data(){
         return {
-            message: "",
-            success: false,
             isLoading: false,
-            dismissSecs: 3,
-            dismissCountDown: 0,
-            showDismissibleAlert: false,
             insertedEvent: null,
-            validationErrors: []
+            validationErrors: [],
+            results:[]
         }
     },
     
@@ -77,9 +68,8 @@ export default {
             axios.post(`${BASE_URL}/event`, {... ev})
             .then(function (response) {
                 
-                let { success, message, validation, data } = response.data;
-                $this.success = success;
-                $this.message = message;
+                let { success, message, validation } = response.data;
+                $this.results.push({success: success, message: message});
                 $this.dismissCountDown = $this.dismissSecs
                 $this.isLoading = false;
 
@@ -89,6 +79,9 @@ export default {
                 }else{
                     $this.validationErrors = validation;
                 }
+
+                setTimeout(function(){ $this.results.shift(); }, 7000);
+ 
 
             })
             .catch(function (error) {
@@ -102,11 +95,21 @@ export default {
 </script>
 
 <style scoped>
-    #result-dialog{
+    .card-header{
+        background: #ffffff;
+        font-weight: bold;
+        font-size: 16px;
+    }
+    #alert-container{
+        
+        width: 300px;
         position: absolute;
-        right: 0px;
-        min-width: 300px;
-        margin-right: 14px;
+        top: 43px;
+        right: 6px;
         z-index: 1;
+
+    }
+    .alert{
+        margin-bottom: 5px;
     }
 </style>

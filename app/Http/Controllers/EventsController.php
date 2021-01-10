@@ -53,7 +53,7 @@ class EventsController extends Controller
 
         if($validator->fails()){
             $success = false;
-            $message = "Failed to add event.";
+            $message = "Failed to create new event.";
             $validation = $validator->messages();
             return response()->json(compact("success", "message", "validation"), 200);
         }
@@ -66,10 +66,9 @@ class EventsController extends Controller
         $event = Event::create(compact("event_name", "start_date", "end_date", "days"));
 
         $success = $event ? true : false;
-        $message = $success ? "Event successfully saved." : "Error occured while trying to save record. Please try again.";
-        $data = Event::get()->last();
+        $message = $success ? "Event successfully saved." : "Failed to create new event. Please try again.";
 
-        return response()->json(compact("success", "message", "data"));
+        return response()->json(compact("success", "message"));
 
     }
 
