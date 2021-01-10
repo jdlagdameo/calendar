@@ -80,7 +80,7 @@ export default {
                     $this.validationErrors = validation;
                 }
 
-                setTimeout(function(){ $this.results.shift(); }, 7000);
+                setTimeout(function(){ $this.results.shift(); }, 5000);
  
 
             })
